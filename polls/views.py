@@ -1,13 +1,19 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.template import loader
 from .models import Question
 
 # Create your views here.
 def index(request):
+    
     questions = Question.objects.order_by('-pub_date')[:5]
-    output = ', '.join([ q.question_text for q in questions ])
-    return HttpResponse(output)
-
+    template = loader.get_template('index.html')
+    context = {
+        'questions': questions,
+    }
+    return HttpResponse(template.render(context, request))
+    #output = ', '.join([ q.question_text for q in questions ])
+    #return HttpResponse(output)
     #return HttpResponse("Hello, world. You're at the polls index.")
 
 def detail(request, question_id):
